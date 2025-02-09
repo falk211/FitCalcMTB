@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Fit Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bike Fit Calculator</h1>
+        <form method="post">
+            <label for="r_sag">Fit Reach (mm):</label>
+            <input type="number" step="0.1" name="r_sag" value="{{ request.form['r_sag'] if request.form else '' }}" required>
+
+            <label for="h_sag">Fit Stack (mm):</label>
+            <input type="number" step="0.1" name="h_sag" value="{{ request.form['h_sag'] if request.form else '' }}" required>
+
+            <label for="s_sag">Fit Saddle Setback (mm):</label>
+            <input type="number" step="0.1" name="s_sag" value="{{ request.form['s_sag'] if request.form else '' }}" required>
+
+            <label for="theta_h">Head Tube Angle (degrees):</label>
+            <input type="number" step="0.1" name="theta_h" value="{{ request.form['theta_h'] if request.form else '' }}" required>
+
+            <label for="theta_s">Seat Tube Angle (degrees):</label>
+            <input type="number" step="0.1" name="theta_s" value="{{ request.form['theta_s'] if request.form else '' }}" required>
+
+            <label for="t_f">Front Travel (mm):</label>
+            <input type="number" step="1" name="t_f" value="{{ request.form['t_f'] if request.form else '' }}" required>
+
+            <label for="t_r">Rear Travel (mm):</label>
+            <input type="number" step="1" name="t_r" value="{{ request.form['t_r'] if request.form else '' }}" required>
+
+            <label for="sag">Sag Percentage (%):</label>
+            <input type="number" step="0.1" name="sag" value="{{ request.form['sag'] if request.form else '' }}" required>
+
+            <button type="submit">Calculate</button>
+        </form>
+
+        {% if result %}
+        <h2>Adjusted Fit Values</h2>
+        <table>
+            <tr>
+                <th>Measurement</th>
+                <th>Fit Value (mm)</th>
+                <th>Adjusted Value (mm)</th>
+            </tr>
+            {% if result.error %}
+            <tr>
+                <td colspan="3" style="color: red;">{{ result.error }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>Reach</td>
+                <td>{{ request.form['r_sag'] }}</td>
+                <td>{{ result.r_unsag }}</td>
+            </tr>
+            <tr>
+                <td>Stack</td>
+                <td>{{ request.form['h_sag'] }}</td>
+                <td>{{ result.h_unsag }}</td>
+            </tr>
+            <tr>
+                <td>Saddle Setback</td>
+                <td>{{ request.form['s_sag'] }}</td>
+                <td>{{ result.s_unsag }}</td>
+            </tr>
+            {% endif %}
+        </table>
+        {% endif %}
+    </div>
+</body>
+</html>
